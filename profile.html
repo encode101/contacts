@@ -1,0 +1,154 @@
+<style>
+	#showProfile li{list-style:none;}	
+</style>
+<div data-role="page" data-theme="c" id="profile">
+  <div data-role="header" data-theme="c" > <a href="javascript:showContacts()" data-icon="arrow-l" data-theme="b">Back</a>
+    <h1>CONTACTS MANAGER</h1>
+  </div>
+  <div data-role="content"> 
+    <script>
+	  function showContacts(){
+			$.mobile.changePage("list.html");
+		}
+		
+		user = KiiUser.getCurrentUser();
+		user.refresh({
+			success:function(){
+				console.log(user);
+				$("#showProfile").empty();
+				$("#displayname").attr("value",user.getDisplayName());
+				$("#email").attr("value",user.getEmailAddress());
+				$("#phone").attr("value",user.getPhoneNumber());
+			},
+			failure:function(){
+				console.log("Failed to get current user");
+			}
+		})  	
+		
+		//console.log(obj);
+		
+	$("#submit").on({
+		click:function(){
+			createProfile();
+		}
+	});
+
+	$("#update").on({
+		click:function(){
+			updateProfile();
+		}
+	})
+	$("#show").on({
+		click:function(){
+			showProfile();
+		}
+	});
+		
+		// Create Bucket For Custom Fields
+		
+		var appBucket = Kii.bucketWithName("mine");
+		function createProfile(){		
+		console.log("Profile Create Called!");
+				
+		// Add Custom Field Values As An Object To This Bucket
+		
+		var obj = appBucket.createObject();
+		obj.set("address",$("#address").val());
+		obj.set("displayname",$("#displayname").val());
+		obj.set("email",$("#email").val());
+		obj.set("phone",$("#phone").val());
+		
+		var username = user.getUsername();
+		obj.set("username",username);
+		alert(username);
+		
+		obj.save({
+		  success: function(theObject) {
+			console.log("Object saved & bucket created!");
+		  },
+		  failure: function(theObject, errorString) {
+			console.log("Error saving object and bucket: " + errorString);
+		  }
+		});
+		
+		return false;
+		}
+		
+		// Update Profile
+		
+		function updateProfile(){
+			
+		}
+			
+		function showProfile(){
+            // show a loading animation
+            $.mobile.showPageLoadingMsg();				
+			
+			var bucket = Kii.bucketWithName("mine");
+			var username = user.getUsername();			
+			var clause = KiiClause.equals("username",username);
+			var queryObject = KiiQuery.queryWithClause(clause);            
+            
+			queryObject.sortByAsc("_created");
+            bucket.executeQuery(queryObject, {
+                success: function(queryPerformed, resultSet) {
+                    results = resultSet;
+                    $("#listview").empty();
+                    for(var i=0; i<resultSet.length; i++) {
+                        var obj = resultSet[i];
+                        var row = createListItem(obj, i);
+                        $("#showProfile").append(row);
+                    }
+                    //$("#listview").listview('refresh');
+                    $.mobile.hidePageLoadingMsg();	
+                },
+                failure: function(queryPerformed, anErrorString) {
+                    $.mobile.hidePageLoadingMsg();	
+                    alert("Unable to execute query: " + anErrorString);
+                    Kii.logger("Unable to execute query: " + anErrorString);
+                }
+            });
+        }
+
+	function message(data){
+		$("#message").html(data)
+		$("#message").fadeIn();
+		setTimeout(function(){
+			$("#message").fadeOut();
+		},3000)
+	}
+	
+	</script>
+    <h1>My Profile</h1>
+    <div id="message"></div>
+    <div id="listview"></div>
+    <div>
+      <form action="" method="post" id="profileform">
+        <table width="100%" border="0">
+          <tr>
+            <td><input type="text" name="displayname" id="displayname" placeholder="Display Name" /></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="email" id="email" placeholder="Email" /></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="phone" id="phone" placeholder="Phone" /></td>
+          </tr>
+          <tr>
+            <td><input type="text" name="address" id="address" placeholder="Address" /></td>
+          </tr>
+          <tr>
+            <td><div data-role="controlgroup" data-type="horizontal">
+                <input type="button" id="submit" data-role="button" value="Save Profile" data-theme="b" />
+                <input type="button" id="update" data-role="button" value="Update Profile" data-theme="b" />
+                <input type="button" id="show" data-role="button"  value="Show Profile" data-theme="b" />
+              </div>
+           	</td>
+          </tr>
+        </table>
+      </form>
+      <ul id="showProfile">
+      </ul>
+    </div>
+  </div>
+</div>

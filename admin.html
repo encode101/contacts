@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Contacts Manger :: ADMIN PANEL</title>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />        
+</head>
+
+<body>
+<div class="ui-page" data-role="page" id="login">
+	<div data-role="header" data-theme="b"><h1>ADMIN</h1></div>
+    <div data-role="content">
+        <div data-role="controlgroup">
+        <div style="margin:18px;">
+                    <label for="basic">Enter a Username:</label>
+                    <input id="username" type="text" name="name" value=""  />                
+                </div>
+            
+                <div style="margin:18px;">
+                    <label for="basic">Enter a Password:</label>
+                    <input id="password" type="password" name="name"  value=""  />
+                </div>
+                
+                <div style="margin:32px 18px;">
+                    <a href="#" id="login-button" data-role="button" data-theme="b">Log In</a>                
+                </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui-page" data-role="page" id="adminpanel">
+	<div data-role="header" data-theme="b"><h1>ADMIN</h1><a href="#" id="reload">Refresh</a></div>
+    <div data-role="content">
+        <div data-role="controlgroup">
+        <a href="" id="createGroup" data-role="button">Create Group</a>
+        <a href="" id="addUser" data-role="button">Add User</a>
+        <a href="" id="viewUser" data-role="button">View Existing Users</a>
+        <a href="" id="deleteUser" data-role="button">Delete User</a>
+        </div>
+        <ol id="app"></ol>
+    </div>
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+<script type="text/javascript" src="KiiSDKv2.1.11.js"></script>
+<script type="text/javascript" src="js/admin.js"></script>
+</body>
+</html>
